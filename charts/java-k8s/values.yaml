@@ -49,6 +49,12 @@ securityContext: {}
   # runAsNonRoot: true
   # runAsUser: 1000
 
+# Custom Selector Labels will be added to labels also
+customSelectorLabels: {}
+
+# Custom Labels
+customLabels: {}
+
 container:
   name: "application-container"
   ports: []
