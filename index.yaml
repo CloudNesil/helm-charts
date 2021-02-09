@@ -1,0 +1,18 @@
+apiVersion: v1
+entries:
+  java-k8s:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2021-02-09T12:29:02.786439787Z"
+    description: A Helm chart for Java apps run on Kubernetes
+    digest: 3f45d7ef878b471c7c3b2043d3c95fb0199c841313d82f901c2bd4912bb0ee71
+    icon: https://cloudnesil.com/wp-content/uploads/2018/09/cropped-simge.png
+    maintainers:
+    - email: kadir@cloudnesil.com
+      name: kadirtaskiran
+    name: java-k8s
+    type: application
+    urls:
+    - https://github.com/CloudNesil/helm-charts/releases/download/java-k8s-0.1.0/java-k8s-0.1.0.tgz
+    version: 0.1.0
+generated: "2021-02-09T12:29:01.986807558Z"
