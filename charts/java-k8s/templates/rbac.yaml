@@ -1,0 +1,26 @@
+{{- if .Values.rbac.enabled }}
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: {{ include "java-k8s.fullname" . }}-pod-reader
+  labels:
+  {{- include "java-k8s.labels" . | nindent 4 }}
+rules:
+  {{- toYaml .Values.rbac.role.rules | nindent 2 }}
+
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: {{ include "java-k8s.fullname" . }}-pod-reader-binding
+  labels:
+  {{- include "java-k8s.labels" . | nindent 4 }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "java-k8s.serviceAccountName" . }}
+roleRef:
+  kind: Role
+  name: {{ include "java-k8s.fullname" . }}-pod-reader
+  apiGroup: rbac.authorization.k8s.io
+
+{{- end }}

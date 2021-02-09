@@ -8,6 +8,19 @@ image:
 
 fullnameOverride: "ci-fullname-override"
 
+rbac:
+  enabled: true
+  role:
+    rules:
+      - apiGroups:
+          - ""
+        verbs:
+          - get
+          - watch
+          - list
+        resources:
+          - pods
+
 podAnnotations:
   annotation: ci
 
