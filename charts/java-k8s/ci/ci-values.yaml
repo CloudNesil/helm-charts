@@ -8,6 +8,12 @@ image:
 
 fullnameOverride: "ci-fullname-override"
 
+customLabels:
+  label1: custom
+
+customSelectorLabels:
+  selector1: mustom
+
 rbac:
   enabled: true
   role:

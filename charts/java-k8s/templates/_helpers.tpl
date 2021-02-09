@@ -35,11 +35,12 @@ Common labels
 */}}
 {{- define "java-k8s.labels" -}}
 helm.sh/chart: {{ include "java-k8s.chart" . }}
-{{ include "java-k8s.selectorLabels" . }}
-{{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-{{- end }}
+app.kubernetes.io/image-tag: {{ .Values.image.tag | quote }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{ include "java-k8s.selectorLabels" . }}
+{{- with .Values.customLabels }}
+{{- toYaml . | nindent 0 }}
+{{- end }}
 {{- end }}
 
 {{/*
@@ -48,6 +49,9 @@ Selector labels
 {{- define "java-k8s.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "java-k8s.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
+{{- with .Values.customSelectorLabels }}
+{{- toYaml . | nindent 0 }}
+{{- end }}
 {{- end }}
 
 {{/*
