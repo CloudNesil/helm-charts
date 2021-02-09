@@ -1,0 +1,16 @@
+{{- $svcPort := (index .Values.service.ports 0).port -}}
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "java-k8s.fullname" . }}-test-connection"
+  labels:
+    {{- include "java-k8s.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args: ['{{ include "java-k8s.fullname" . }}:{{ $svcPort }}']
+  restartPolicy: Never
