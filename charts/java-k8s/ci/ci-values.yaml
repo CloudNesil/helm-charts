@@ -1,0 +1,56 @@
+replicaCount: 2
+
+image:
+  repository: nginx
+  pullPolicy: IfNotPresent
+  tag: "latest"
+  pullSecrets: []
+
+fullnameOverride: "ci-fullname-override"
+
+podAnnotations:
+  annotation: ci
+
+container:
+  name: "ci-container"
+  ports:
+    - containerPort: 80
+      name: http
+      protocol: TCP
+
+service:
+  enabled: true
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: 80
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    ingress.annotations: ci
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: "/"
+          servicePort: 80
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 50m
+    memory: 64Mi
+
+env:
+  ## To define custom environment variables
+  open:
+    TESTENV: ci
+  field:
+    HOSTNAME: status.podIP
+  secret:
+    TESTSECRET: ABC123-ci

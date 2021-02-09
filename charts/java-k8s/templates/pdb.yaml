@@ -1,0 +1,13 @@
+{{- if or (and .Values.autoscaling.enabled (gt (.Values.autoscaling.minReplicas | int) 1)) (gt (.Values.replicaCount | int) 1) }}
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: "{{ include "java-k8s.fullname" . }}-pdb"
+  labels:
+    {{- include "java-k8s.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "java-k8s.selectorLabels" . | nindent 6 }}
+  minAvailable: {{ .Values.podDisruptionBudget.minAvailable }}
+{{- end -}}

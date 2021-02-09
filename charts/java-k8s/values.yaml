@@ -1,0 +1,142 @@
+# Default values for java-k8s.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: nginx
+  pullPolicy: IfNotPresent
+  tag: ""
+  pullSecrets: []
+
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+container:
+  name: "application-container"
+  ports: []
+  ## ports:
+  ##   - containerPort: 8080
+  ##     name: http
+  ##     protocol: TCP
+  ##   - containerPort: 2551
+  ##     name: akka
+  ##     protocol: TCP
+  ##   - containerPort: 8558
+  ##     name: management
+  ##     protocol: TCP
+  ##   - containerPort: 9102
+  ##     name: metrics
+  ##     protocol: TCP
+
+env:
+  ## To define custom environment variables
+  open: {}
+  field:
+    # HOSTNAME: status.podIP
+  secret:
+    # TEST: 123123
+  # Name of an existing secret to get the secret values from
+  existingSecret:
+  existingSecretMappings:
+    # username for basic http authentication
+    # BASIC_AUTH_USER: AAA
+
+
+service:
+  enabled: false
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: 80
+  ## ports:
+  ##   - name: http
+  ##     port: 8080
+  ##     protocol: TCP
+  ##     targetPort: 8080
+  ##   - name: akka
+  ##     port: 2551
+  ##     protocol: TCP
+  ##     targetPort: 2551
+  ##   - name: management
+  ##     port: 8558
+  ##     protocol: TCP
+  ##     targetPort: 8558
+
+ingress:
+  enabled: false
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: "/"
+          servicePort: 8080
+      ## paths:
+      ##   - path: "/"
+      ##     servicePort: 8080
+      ##   - path: "/"
+      ##     servicePort: 2551
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+## Pod disruption budget
+podDisruptionBudget:
+  minAvailable: 1
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+livenessProbe: {}
+
+readinessProbe: {}

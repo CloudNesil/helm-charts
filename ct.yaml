@@ -1,0 +1,12 @@
+# See https://github.com/helm/chart-testing#configuration
+chart-dirs:
+  - charts
+chart-repos:
+check-version-increment: true
+debug: false
+helm-extra-args: --timeout 600s
+remote: origin
+validate-chart-schema: true
+validate-maintainers: true
+validate-yaml: true
+target-branch: main
