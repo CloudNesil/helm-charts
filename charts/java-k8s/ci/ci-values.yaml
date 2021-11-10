@@ -77,8 +77,8 @@ env:
 volumes: []
   #- name: data
   #  persistentVolumeClaim:
-#    claimName: my-volume
+  #    claimName: my-volume
 
 volumeMounts: []
-#  - mountPath: /var/tmp/
-#    name: data
+  #- mountPath: /var/tmp/
+  #  name: data

@@ -167,5 +167,5 @@ volumes: []
   #    claimName: my-volume
 
 volumeMounts: []
-#  - mountPath: /var/tmp/
-#    name: data
+  #- mountPath: /var/tmp/
+  #  name: data
