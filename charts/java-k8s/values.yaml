@@ -160,3 +160,12 @@ affinity: {}
 livenessProbe: {}
 
 readinessProbe: {}
+
+volumes: []
+  #- name: data
+  #  persistentVolumeClaim:
+  #    claimName: my-volume
+
+volumeMounts: []
+#  - mountPath: /var/tmp/
+#    name: data

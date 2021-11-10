@@ -73,3 +73,12 @@ env:
     HOSTNAME: status.podIP
   secret:
     TESTSECRET: ABC123-ci
+
+volumes: []
+  #- name: data
+  #  persistentVolumeClaim:
+#    claimName: my-volume
+
+volumeMounts: []
+#  - mountPath: /var/tmp/
+#    name: data
