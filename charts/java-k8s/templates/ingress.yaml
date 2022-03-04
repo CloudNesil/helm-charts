@@ -1,8 +1,8 @@
 {{- if .Values.ingress.enabled -}}
 {{- $fullName := include "java-k8s.fullname" . -}}
-{{- $semverCompResult := .Capabilities.KubeVersion.GitVersion -}}
-{{- if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
-apiVersion: networking.k8s.io/v1beta1
+{{- $semverCompResult := semverCompare ">=1.18.0" .Capabilities.KubeVersion.GitVersion -}}
+{{- if $semverCompResult -}}
+apiVersion: networking.k8s.io/v1
 {{- else -}}
 apiVersion: extensions/v1beta1
 {{- end }}
@@ -33,9 +33,22 @@ spec:
         paths:
           {{- range .paths }}
           - path: {{ .path }}
+            {{- if $semverCompResult }}
+            {{- if .pathType }}
+            pathType: {{ .pathType }}
+            {{- else }}
+            pathType: ImplementationSpecific
+            {{- end }}
+            backend:
+              service:
+                name: {{ $fullName }}
+                port:
+                  number: {{ .servicePort }}
+            {{- else }}
             backend:
               serviceName: {{ $fullName }}
               servicePort: {{ .servicePort }}
+            {{- end }}
           {{- end }}
     {{- end }}
 {{- end }}

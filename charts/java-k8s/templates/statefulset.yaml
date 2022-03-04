@@ -1,6 +1,6 @@
-{{- if eq .Values.type "Deployment" -}}
+{{- if eq .Values.type "StatefulSet" -}}
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: {{ include "java-k8s.fullname" . }}
   labels:
@@ -9,6 +9,7 @@ spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
+  serviceName: {{ include "java-k8s.fullname" . }}
   selector:
     matchLabels:
       {{- include "java-k8s.selectorLabels" . | nindent 6 }}
@@ -69,7 +70,7 @@ spec:
                 secretKeyRef:
                   name: {{ $secret_name | quote }}
                   key: {{ $name | quote }}
-    {{- end }}
+  {{- end }}
 {{- end }}
 {{- end }}
           {{- with .Values.container.ports }}

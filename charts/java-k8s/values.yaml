@@ -4,6 +4,9 @@
 
 replicaCount: 1
 
+# Deployment or StatefulSet can be selected
+type: Deployment
+
 image:
   repository: nginx
   pullPolicy: IfNotPresent
@@ -118,6 +121,7 @@ ingress:
       paths:
         - path: "/"
           servicePort: 8080
+          pathType: ImplementationSpecific
       ## paths:
       ##   - path: "/"
       ##     servicePort: 8080
