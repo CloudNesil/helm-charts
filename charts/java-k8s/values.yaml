@@ -4,7 +4,7 @@
 
 replicaCount: 1
 
-#Deployment or StatefulSet can be selected
+# Deployment or StatefulSet can be selected
 type: Deployment
 
 image:
