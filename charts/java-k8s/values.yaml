@@ -75,19 +75,38 @@ container:
   ##     name: metrics
   ##     protocol: TCP
 
-env:
-  ## To define custom environment variables
-  open: {}
-  field:
-    # HOSTNAME: status.podIP
-  secret:
-    # TEST: 123123
-  # Name of an existing secret to get the secret values from
-  existingSecret:
-  existingSecretMappings:
-    # username for basic http authentication
-    # BASIC_AUTH_USER: AAA
+initContainer:
+  enabled: false
+  image: busybox:latest
+  env: {}
+  command: []
 
+env:
+  #field:
+    # HOSTNAME: status.podIP
+
+configmap:
+  create: false
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: "config"
+  # To use existing configmap if set create must be false
+  existingConfigmapName: ""
+  data: {}
+  #data:
+  #  key: value
+
+# Secret to get values via ENV variables
+secret:
+  create: false
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: "secret"
+  # To use existing secret if set create must be false
+  existingSecretName:
+  data: {}
+  #data:
+  #  key: value
 
 service:
   enabled: false

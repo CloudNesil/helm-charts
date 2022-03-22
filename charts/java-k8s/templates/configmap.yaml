@@ -1,0 +1,14 @@
+{{- if and (not .Values.configmap.existingConfigmapName) .Values.configmap.create }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "java-k8s.configmapName" . }}
+  labels:
+    {{- include "java-k8s.labels" . | nindent 4 }}
+data:
+  {{- if .Values.configmap.data }}
+    {{- range $setting, $option := .Values.configmap.data }}
+    {{ $setting | quote }}: {{ $option | quote }}
+    {{- end }}
+    {{- end }}
+  {{- end }}

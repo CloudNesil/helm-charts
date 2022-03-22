@@ -65,3 +65,36 @@ Create the name of the service account to use
 {{- end }}
 {{- end }}
 
+{{/*
+Create the name of the secret to use
+*/}}
+{{- define "java-k8s.secretName" -}}
+    {{- if .Values.secret.create }}
+        {{- if .Values.secret.name }}
+            {{- printf "%s-%s" (include "java-k8s.fullname" .) .Values.secret.name }}
+        {{- else }}
+            {{- printf "%s-%s" (include "java-k8s.fullname" .) "secret" }}
+        {{- end }}
+    {{- else if .Values.secret.existingSecretName }}
+        {{- default "default" .Values.secret.existingSecretName }}
+    {{- else }}
+        {{- printf "%s-%s" (include "java-k8s.fullname" .) "secret" }}
+    {{- end }}
+{{- end }}
+
+{{/*
+Create the name of the configmap to use
+*/}}
+{{- define "java-k8s.configmapName" -}}
+    {{- if .Values.configmap.create }}
+        {{- if .Values.configmap.name }}
+            {{- printf "%s-%s" (include "java-k8s.fullname" .) .Values.configmap.name }}
+        {{- else }}
+            {{- printf "%s-%s" (include "java-k8s.fullname" .) "config" }}
+        {{- end }}
+    {{- else if .Values.configmap.existingConfigmapName }}
+        {{- default "default" .Values.configmap.existingConfigmapName }}
+    {{- else }}
+        {{- printf "%s-%s" (include "java-k8s.fullname" .) "config" }}
+    {{- end }}
+{{- end }}

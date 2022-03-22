@@ -27,51 +27,57 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       serviceAccountName: {{ include "java-k8s.serviceAccountName" . }}
+{{- with .Values.podSecurityContext }}
       securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
-      containers:
-        - name: {{ .Values.container.name | default .Chart.Name }}
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+        {{- toYaml . | nindent 8 }}
+{{- end }}
+{{- if .Values.initContainer.enabled }}
+      initContainers:
+        - name: init-ds
+          image: "{{ .Values.initContainer.image }}"
+{{- if .Values.initContainer.env }}
           env:
-{{- range $name, $value := .Values.env.open }}
-  {{- if not (empty $value) }}
+  {{- range $name, $value := .Values.initContainer.env }}
+    {{- if not (empty $value) }}
             - name: {{ $name | quote }}
               value: {{ $value | quote }}
+    {{- end }}
   {{- end }}
 {{- end }}
-{{- range $name, $value := .Values.env.field }}
-  {{- if not (empty $value) }}
+{{- with .Values.initContainer.command }}
+          command:
+          {{- toYaml . | nindent 12 }}
+{{- end }}
+{{- end }}
+      containers:
+        - name: {{ .Values.container.name | default .Chart.Name }}
+{{- with .Values.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+{{- end }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+{{- if .Values.env }}
+          env:
+  {{- range $name, $value := .Values.env.field }}
+    {{- if not (empty $value) }}
             - name: {{ $name | quote }}
               valueFrom:
                 fieldRef:
                   fieldPath: {{ $value | quote }}
-  {{- end }}
-{{- end }}
-{{- if .Values.env.existingSecret }}
-  {{- $secret_name := .Values.env.existingSecret }}
-  {{- range $name, $key := .Values.env.existingSecretMappings }}
-    {{- if not (empty $key) }}
-            - name: {{ $name | quote }}
-              valueFrom:
-                secretKeyRef:
-                  name: {{ $secret_name | quote }}
-                  key: {{ $key | quote }}
     {{- end }}
   {{- end }}
-{{- else }}
-  {{- $secret_name := include "java-k8s.fullname" . }}
-  {{- range $name, $key := .Values.env.secret }}
-    {{- if not (empty $key) }}
-            - name: {{ $name | quote }}
-              valueFrom:
-                secretKeyRef:
-                  name: {{ $secret_name | quote }}
-                  key: {{ $name | quote }}
-  {{- end }}
 {{- end }}
+{{- if or .Values.secret.create .Values.configmap.create .Values.configmap.existingConfigmapName .Values.secret.existingSecretName }}
+          envFrom:
+  {{- if or .Values.configmap.create .Values.configmap.existingConfigmapName }}
+            - configMapRef:
+                name: {{ include "java-k8s.configmapName" . }}
+  {{- end }}
+  {{- if or .Values.secret.create .Values.secret.existingSecretName }}
+            - secretRef:
+                name: {{ include "java-k8s.secretName" . }}
+  {{- end }}
 {{- end }}
           {{- with .Values.container.ports }}
           ports:
@@ -85,8 +91,10 @@ spec:
           readinessProbe:
           {{- toYaml . | nindent 12 }}
           {{- end }}
+          {{- with .Values.resources }}
           resources:
-            {{- toYaml .Values.resources | nindent 12 }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           {{- with .Values.volumeMounts }}
           volumeMounts:
             {{- toYaml . | nindent 12 }}
